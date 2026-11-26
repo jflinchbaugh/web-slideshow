@@ -435,9 +435,11 @@
                           info-cs (.getComputedStyle js/window info)
                           btn-cs (.getComputedStyle js/window btn)]
                       (is (not= "240px" (.-minWidth fn-cs)))
-                      (is (= "27.2px" (.-fontSize info-cs)))
+                      (is (not= "240px" (.-maxWidth fn-cs)))
+                      (is (= "100%" (.-width info-cs)))
+                      (is (= "17.6px" (.-fontSize info-cs)))
                       (is (= "27.2px" (.-fontSize btn-cs)))
-                      (is (str/includes? css "font-size: 1.6rem;"))))
+                      (is (str/includes? css "font-size: 1rem;"))))
                   (finally
                     (.remove style-el)
                     ((js/goog.object.get view "unmount"))
