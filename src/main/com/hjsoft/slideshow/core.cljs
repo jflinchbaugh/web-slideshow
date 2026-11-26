@@ -341,30 +341,17 @@
    (if (empty? fetched-images)
      {:images [] :index 0}
      (let [current-url (get current-images current-idx)
-           fetched-vec (vec fetched-images)]
-       (if (= order "shuffle")
-         (if (empty? current-images)
-           {:images (shuffle-coll fetched-vec rand-int-fn) :index 0}
-           (let [fetched-set (set fetched-vec)
-                 surviving (filterv (fn [u] (contains? fetched-set u))
-                                    current-images)
-                 existing-set (set current-images)
-                 added (remove (fn [u] (contains? existing-set u))
-                               fetched-vec)
-                 shuffled-added (shuffle-coll added rand-int-fn)
-                 next-images (into surviving shuffled-added)
-                 found-idx (find-index next-images current-url)
-                 next-idx (or found-idx
-                              (min (max 0 current-idx)
-                                   (dec (count next-images))))]
-             {:images next-images :index next-idx}))
-         (let [found-idx (find-index fetched-vec current-url)
-               next-idx (if (empty? current-images)
-                          0
-                          (or found-idx
-                              (min (max 0 current-idx)
-                                   (dec (count fetched-vec)))))]
-           {:images fetched-vec :index next-idx}))))))
+           fetched-vec (vec fetched-images)
+           next-images (if (= order "shuffle")
+                         (shuffle-coll fetched-vec rand-int-fn)
+                         fetched-vec)
+           found-idx (find-index next-images current-url)
+           next-idx (if (empty? current-images)
+                      0
+                      (or found-idx
+                          (min (max 0 current-idx)
+                               (dec (count next-images)))))]
+       {:images next-images :index next-idx}))))
 
 (defn next-index
   "Advance slide index with wrap-around."

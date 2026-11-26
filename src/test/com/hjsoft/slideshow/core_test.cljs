@@ -220,7 +220,20 @@
       (is (= #{"b.jpg" "c.jpg" "d.jpg"} (set (:images updated))))
       (if (contains? #{"b.jpg" "c.jpg"} kept-url)
         (is (= kept-url (nth (:images updated) (:index updated))))
-        (is (< (:index updated) (count (:images updated))))))))
+        (is (< (:index updated) (count (:images updated)))))))
+  (testing "reshuffles on refresh in shuffle mode even with same images"
+    (let [zero-rand (fn [_] 0)
+          same (core/merge-image-list
+                ["d.jpg" "a.jpg" "c.jpg" "b.jpg"] 2
+                ["a.jpg" "b.jpg" "c.jpg" "d.jpg"] "shuffle" zero-rand)
+          with-new (core/merge-image-list
+                    ["a.jpg" "b.jpg" "c.jpg"] 1
+                    ["a.jpg" "b.jpg" "c.jpg" "d.jpg"]
+                    "shuffle" zero-rand)]
+      (is (= ["b.jpg" "c.jpg" "d.jpg" "a.jpg"] (:images same)))
+      (is (= "c.jpg" (nth (:images same) (:index same))))
+      (is (= ["b.jpg" "c.jpg" "d.jpg" "a.jpg"] (:images with-new)))
+      (is (= 0 (:index with-new))))))
 
 (deftest stepping-and-filename-test
   (testing "wraps next and prev indices cleanly"
