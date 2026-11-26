@@ -639,7 +639,9 @@
                     :on-click (fn [_]
                                 (show-hud!)
                                 (advance-next))}
-                   "Next \u203a")
+                   "Next \u203a"))
+        (d/div
+         {:class "hud-controls"}
          (d/button {:class "hud-btn"
                     :type "button"
                     :disabled refreshing?

@@ -419,13 +419,25 @@
                     (is (some? filename))
                     (is (= info (aget children 0)))
                     (is (= controls (aget children 1)))
+                    (is (= 3 (.-length children)))
+                    (is (= 2 (.-length
+                              (.querySelectorAll js/document
+                                                 ".hud-controls"))))
+                    (is (= 3 (.-length (.-children (aget children 1)))))
+                    (is (= 3 (.-length (.-children (aget children 2)))))
                     (let [cs (.getComputedStyle js/window hud)]
                       (is (= "flex" (.-display cs)))
                       (is (= "column" (.-flexDirection cs)))
                       (is (= "center" (.-alignItems cs)))
                       (is (not= "wrap" (.-flexWrap cs))))
-                    (let [fn-cs (.getComputedStyle js/window filename)]
-                      (is (not= "240px" (.-minWidth fn-cs)))))
+                    (let [fn-cs (.getComputedStyle js/window filename)
+                          btn (.querySelector js/document ".hud-btn")
+                          info-cs (.getComputedStyle js/window info)
+                          btn-cs (.getComputedStyle js/window btn)]
+                      (is (not= "240px" (.-minWidth fn-cs)))
+                      (is (= "27.2px" (.-fontSize info-cs)))
+                      (is (= "27.2px" (.-fontSize btn-cs)))
+                      (is (str/includes? css "font-size: 1.6rem;"))))
                   (finally
                     (.remove style-el)
                     ((js/goog.object.get view "unmount"))

@@ -331,7 +331,7 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  font-size: 0.85rem;
+  font-size: 1.7rem;
   min-width: 0;
   max-width: 100%;
 }
@@ -355,7 +355,7 @@ body {
 
 .hud-error {
   color: #fca5a5;
-  font-size: 0.8rem;
+  font-size: 1.6rem;
 }
 
 .hud-controls {
@@ -373,7 +373,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text);
   font-family: var(--font);
-  font-size: 0.85rem;
+  font-size: 1.7rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s;
