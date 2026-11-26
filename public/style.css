@@ -228,6 +228,8 @@ body {
 
 .slideshow-image--outgoing {
   z-index: 1;
+  animation: slide-fade-out var(--fade-duration, 1000ms)
+    ease-in-out both;
 }
 
 .slideshow-image--incoming {
@@ -254,6 +256,15 @@ body {
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes slide-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -297,9 +308,9 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: var(--text);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: 8px;
   justify-content: center;
   transition: opacity 0.25s ease;
 }
@@ -317,9 +328,16 @@ body {
 .hud-info {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
   font-size: 0.85rem;
   min-width: 0;
+  max-width: 100%;
+}
+
+.hud-info:empty {
+  display: none;
 }
 
 .hud-counter {

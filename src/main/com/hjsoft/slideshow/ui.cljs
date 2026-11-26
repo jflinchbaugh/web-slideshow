@@ -383,11 +383,16 @@
     (hooks/use-effect
      [(:seq fade-state) (:prev fade-state) fade-ms]
      (when (and (:prev fade-state) (pos? fade-ms))
-       (let [id (js/setTimeout
+       (let [expected-seq (:seq fade-state)
+             id (js/setTimeout
                  (fn []
                    (when (.-current mounted-ref)
-                     (set-fade-state (fn [st] (assoc st :prev nil)))))
-                 fade-ms)]
+                     (set-fade-state
+                      (fn [st]
+                        (if (= (:seq st) expected-seq)
+                          (assoc st :prev nil)
+                          st)))))
+                 (+ fade-ms 100))]
          (fn []
            (js/clearTimeout id)))))
     (hooks/use-effect
@@ -537,11 +542,19 @@
          (and (= status :ready) active-url)
          (<>
           (when prev-url
-            (d/img {:key (str "out-" (:seq fade-state) "-" prev-url)
-                    :class (str fit-cls " slideshow-image--outgoing")
-                    :src prev-url
-                    :alt ""
-                    :aria-hidden "true"}))
+            (let [cur-seq (:seq fade-state)]
+              (d/img {:key (str "out-" cur-seq "-" prev-url)
+                      :class (str fit-cls " slideshow-image--outgoing")
+                      :src prev-url
+                      :alt ""
+                      :aria-hidden "true"
+                      :on-animation-end
+                      (fn [_]
+                        (set-fade-state
+                         (fn [st]
+                           (if (= (:seq st) cur-seq)
+                             (assoc st :prev nil)
+                             st))))})))
           (d/img {:key (str "in-" (:seq fade-state) "-" active-url)
                   :class in-cls
                   :src active-url
